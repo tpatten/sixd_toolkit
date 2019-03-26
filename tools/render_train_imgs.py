@@ -15,8 +15,8 @@ from pysixd import view_sampler, inout, misc, renderer
 
 from params.dataset_params import get_dataset_params
 
-# dataset = 'hinterstoisser'
-dataset = 'tless'
+dataset = 'hinterstoisser'
+#dataset = 'tless'
 # dataset = 'tudlight'
 # dataset = 'rutgers'
 # dataset = 'tejani'
@@ -101,11 +101,11 @@ shading = 'phong' # 'flat', 'phong'
 ssaa_fact = 4
 
 # Output path masks
-out_rgb_mpath = '../output/render/{:02d}/rgb/{:04d}.png'
-out_depth_mpath = '../output/render/{:02d}/depth/{:04d}.png'
-out_obj_info_path = '../output/render/{:02d}/info.yml'
-out_obj_gt_path = '../output/render/{:02d}/gt.yml'
-out_views_vis_mpath = '../output/render/views_radius={}.ply'
+out_rgb_mpath = '/home/tpatten/Data/SIXD/hinterstoisser/render/{:02d}/rgb/{:04d}.png'
+out_depth_mpath = '/home/tpatten/Data/SIXD/hinterstoisser/render/{:02d}/depth/{:04d}.png'
+out_obj_info_path = '/home/tpatten/Data/SIXD/hinterstoisser/render/{:02d}/info.yml'
+out_obj_gt_path = '/home/tpatten/Data/SIXD/hinterstoisser/render/{:02d}/gt.yml'
+out_views_vis_mpath = '/home/tpatten/Data/SIXD/hinterstoisser/render/views_radius={}.ply'
 
 # Prepare output folder
 # misc.ensure_dir(os.path.dirname(out_obj_info_path))

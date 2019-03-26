@@ -11,16 +11,16 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from pysixd import inout
 from params.dataset_params import get_dataset_params
 
-# dataset = 'hinterstoisser'
-dataset = 'tless'
+dataset = 'hinterstoisser'
+#dataset = 'tless'
 # dataset = 'tudlight'
 # dataset = 'rutgers'
 # dataset = 'tejani'
 # dataset = 'doumanoglou'
 # dataset = 'toyotalight'
 
-dataset_part = 'train'
-# dataset_part = 'test'
+#dataset_part = 'train'
+dataset_part = 'test'
 
 use_image_subset = True # Whether to use only the specified subset of images
 delta = 15 # Tolerance used in the visibility test [mm]

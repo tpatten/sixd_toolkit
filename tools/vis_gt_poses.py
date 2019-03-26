@@ -13,8 +13,8 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from pysixd import inout, misc, renderer
 from params.dataset_params import get_dataset_params
 
-# dataset = 'hinterstoisser'
-dataset = 'tless'
+dataset = 'hinterstoisser'
+#dataset = 'tless'
 # dataset = 'tudlight'
 # dataset = 'rutgers'
 # dataset = 'tejani'
@@ -49,8 +49,10 @@ vis_orig_color = False
 colors = inout.load_yaml('../data/colors.yml')
 
 # Path masks for output images
-vis_rgb_mpath = '../output/vis_gt_poses_{}/{:02d}/{:04d}.jpg'
-vis_depth_mpath = '../output/vis_gt_poses_{}/{:02d}/{:04d}_depth_diff.jpg'
+vis_coord_img_mpath = '/home/tpatten/Data/SIXD/hinterstoisser/vis_gt_poses_{}/{:02d}/{:04d}_coord.jpg'
+vis_coord_np_mpath = '/home/tpatten/Data/SIXD/hinterstoisser/vis_gt_poses_{}/{:02d}/{:04d}_coord.npy'
+vis_rgb_mpath = '/home/tpatten/Data/SIXD/hinterstoisser/vis_gt_poses_{}/{:02d}/{:04d}.jpg'
+vis_depth_mpath = '/home/tpatten/Data/SIXD/hinterstoisser/vis_gt_poses_{}/{:02d}/{:04d}_depth_diff.jpg'
 
 # Whether to consider only the specified subset of images
 use_image_subset = True
@@ -119,11 +121,16 @@ for scene_id in scene_ids_curr:
             R = gt['cam_R_m2c']
             t = gt['cam_t_m2c']
 
+            #print "model['pts']"
+            #print model['pts']
+
             # Rendering
             if vis_rgb:
                 if vis_orig_color:
+                    #print 'vis_orig_color is TRUE'
                     m_rgb = renderer.render(model, im_size, K, R, t, mode='rgb')
                 else:
+                    #print 'vis_orig_color is FALSE'
                     m_rgb = renderer.render(model, im_size, K, R, t, mode='rgb',
                                             surf_color=color)
 
@@ -139,10 +146,12 @@ for scene_id in scene_ids_curr:
 
             # Combine the RGB renderings
             if vis_rgb:
+                #print m_rgb[mask]
                 if vis_rgb_resolve_visib:
                     ren_rgb[mask] = m_rgb[mask].astype(ren_rgb.dtype)
                 else:
                     ren_rgb += m_rgb.astype(ren_rgb.dtype)
+                #print ren_rgb
 
                 # Draw 2D bounding box and info
                 if True:
@@ -164,12 +173,25 @@ for scene_id in scene_ids_curr:
 
         # Save RGB visualization
         if vis_rgb:
-            vis_im_rgb = 0.5 * rgb.astype(np.float32) +\
-                         0.5 * ren_rgb + \
-                         1.0 * ren_rgb_info
+            #vis_im_rgb = 0.5 * rgb.astype(np.float32) +\
+            #             0.5 * ren_rgb + \
+            #             1.0 * ren_rgb_info
+            vis_im_rgb = rgb.astype(np.float32)
             vis_im_rgb[vis_im_rgb > 255] = 255
+            vis_im_coord = ren_rgb
+            #for i in vis_im_coord:
+            #    for j in i:
+            #        if sum(j) > 0:
+            #            print j
+            vis_im_coord[vis_im_coord > 255] = 255
             inout.save_im(vis_rgb_mpath.format(dataset, scene_id, im_id),
                           vis_im_rgb.astype(np.uint8))
+            inout.save_im(vis_coord_img_mpath.format(dataset, scene_id, im_id),
+                          vis_im_coord)
+            #print 'vis_im_coord.shape', vis_im_coord.shape
+            #print 'vis_im_coord.type', type(vis_im_coord)
+            np.save(vis_coord_np_mpath.format(dataset, scene_id, im_id), vis_im_coord)
+            #sys.exit()
 
         # Save image of depth differences
         if vis_depth:

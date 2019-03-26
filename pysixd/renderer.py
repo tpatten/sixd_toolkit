@@ -34,6 +34,7 @@ varying vec2 v_texcoord;
 varying vec3 v_eye_pos;
 varying vec3 v_L;
 varying vec3 v_normal;
+varying vec3 v_position;
 
 void main() {
     gl_Position = u_mvp * vec4(a_position, 1.0);
@@ -42,6 +43,7 @@ void main() {
     v_eye_pos = (u_mv * vec4(a_position, 1.0)).xyz; // Vertex position in eye coords.
     v_L = normalize(u_light_eye_pos - v_eye_pos); // Vector to the light
     v_normal = normalize(u_nm * vec4(a_normal, 1.0)).xyz; // Normal in eye coords.
+    v_position = a_position;
 }
 """
 
@@ -56,6 +58,7 @@ varying vec3 v_color;
 varying vec2 v_texcoord;
 varying vec3 v_eye_pos;
 varying vec3 v_L;
+varying vec3 v_position;
 
 void main() {
     // Face normal in eye coords.
@@ -71,6 +74,7 @@ void main() {
     else {
         gl_FragColor = vec4(light_w * v_color, 1.0);
     }
+    gl_FragColor = vec4(v_position, 1.0);
 }
 """
 
@@ -257,7 +261,14 @@ def draw_color(shape, vertex_buffer, index_buffer, texture, mat_model, mat_view,
     gl.glReadPixels(0, 0, shape[1], shape[0], gl.GL_RGBA, gl.GL_FLOAT, rgb)
     rgb.shape = shape[0], shape[1], 4
     rgb = rgb[::-1, :]
-    rgb = np.round(rgb[:, :, :3] * 255).astype(np.uint8) # Convert to [0, 255]
+    #for i in rgb:
+    #    for j in i:
+    #        #if sum(j) > 0:
+    #        if j[0] == -23.0565:
+    #            print j
+
+    #rgb = np.round(rgb[:, :, :3] * 255).astype(np.uint8) # Convert to [0, 255]
+    rgb = rgb[:, :, :3]
 
     fbo.deactivate()
 
@@ -344,6 +355,8 @@ def render(model, im_size, K, R, t, clip_near=100, clip_far=2000,
                              ('a_texcoord', np.float32, 2)]
             vertices = np.array(zip(model['pts'], colors, texture_uv),
                                 vertices_type)
+            #print "vertices"
+            #print vertices
         else: # shading == 'phong'
             vertices_type = [('a_position', np.float32, 3),
                              ('a_normal', np.float32, 3),
