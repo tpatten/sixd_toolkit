@@ -10,7 +10,7 @@ http://cmp.felk.cvut.cz/sixd/challenge_2017
 - **pysixd** - Core library that takes care of i/o operations, rendering,
                calculation of pose errors etc.
 - **tools** - Scripts for evaluation, rendering of training images,
-              visualization of 6D object poses etc.
+              visualization of 6D object poses etc. NOTE: extra script to visualize correspondeces.
 
 ## Installation
 
