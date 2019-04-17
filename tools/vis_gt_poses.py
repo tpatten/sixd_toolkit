@@ -40,7 +40,7 @@ vis_rgb = True
 vis_rgb_resolve_visib = True
 
 # Indicates whether to render depth image
-vis_depth = False
+vis_depth = True
 
 # If to use the original model color
 vis_orig_color = False

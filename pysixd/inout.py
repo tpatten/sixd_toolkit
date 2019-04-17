@@ -72,6 +72,13 @@ def save_depth(path, im):
     with open(path, 'wb') as f:
         w_depth.write(f, np.reshape(im_uint16, (-1, im.shape[1])))
 
+def save_depth_int32(path, im):
+    # PyPNG library is used since it allows to save 16-bit PNG
+    w_depth = png.Writer(im.shape[1], im.shape[0], greyscale=True, bitdepth=16)
+    im_int32 = np.round(im).astype(np.int32)
+    with open(path, 'wb') as f:
+        w_depth.write(f, np.reshape(im_int32, (-1, im.shape[1])))
+
 def load_info(path):
     with open(path, 'r') as f:
         info = yaml.load(f, Loader=yaml.CLoader)
